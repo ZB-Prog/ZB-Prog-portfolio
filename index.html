@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>周彬 - 建筑设计作品集</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-bg: #f7f6f4;
+            --color-bg-alt: #f0efed;
+            --color-surface: #ffffff;
+            --color-text-primary: #1a1a1a;
+            --color-text-secondary: #4a4a4a;
+            --color-text-tertiary: #7a7a7a;
+            --color-text-muted: #9a9a9a;
+            --color-border: #e0ded9;
+            --color-border-light: #ecebe7;
+            --color-accent: #2c2c2c;
+            --color-accent-hover: #1a1a1a;
+            --color-line: #d5d3ce;
+            --color-shadow: rgba(0,0,0,0.06);
+            --color-shadow-hover: rgba(0,0,0,0.12);
+            --color-modal-overlay: rgba(0,0,0,0.5);
+            --color-scroll-top: var(--color-accent);
+            --color-scroll-top-text: #fff;
+            --font-display: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+            --font-body: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+            --font-en: "Inter", "Helvetica Neue", sans-serif;
+        }
+        body.dark {
+            --color-bg: #1a1a1e;
+            --color-bg-alt: #222227;
+            --color-surface: #2a2a2f;
+            --color-text-primary: #e0e0e0;
+            --color-text-secondary: #b0b0b0;
+            --color-text-tertiary: #909090;
+            --color-text-muted: #707070;
+            --color-border: #3a3a3f;
+            --color-border-light: #333338;
+            --color-accent: #e8e8e8;
+            --color-accent-hover: #ffffff;
+            --color-line: #44444a;
+            --color-shadow: rgba(255,255,255,0.04);
+            --color-shadow-hover: rgba(255,255,255,0.1);
+            --color-modal-overlay: rgba(0,0,0,0.7);
+            --color-scroll-top: #e8e8e8;
+            --color-scroll-top-text: #1a1a1e;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; font-size: 16px; -webkit-font-smoothing: antialiased; }
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-bg);
+            color: var(--color-text-primary);
+            line-height: 1.7;
+            min-height: 100vh;
+            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='80' height='80' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+            background-attachment: fixed;
+            overflow-x: hidden;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .main-container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+
+        .top-accent-line {
+            position: fixed; top: 0; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent 0%, var(--color-accent) 15%, var(--color-accent) 85%, transparent 100%);
+            z-index: 1000; opacity: 0.8;
+        }
+
+        .theme-toggle {
+            position: fixed; top: 1.2rem; right: 2rem;
+            width: 42px; height: 42px; border-radius: 50%;
+            background: var(--color-surface); border: 1px solid var(--color-border);
+            color: var(--color-text-secondary); font-size: 1.3rem;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 1001;
+            transition: all 0.25s;
+            box-shadow: 0 2px 8px var(--color-shadow);
+        }
+        .theme-toggle:hover { border-color: var(--color-accent); color: var(--color-accent); transform: scale(1.08); }
+        body.dark .theme-toggle { color: #ffffff; }
+
+        .scroll-top-btn {
+            position: fixed; bottom: 2.5rem; right: 2rem;
+            width: 44px; height: 44px; border-radius: 50%;
+            background: var(--color-scroll-top); color: var(--color-scroll-top-text);
+            border: none; font-size: 1.4rem;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 999;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s, transform 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .scroll-top-btn.visible { opacity: 0.85; pointer-events: auto; }
+        .scroll-top-btn:hover { opacity: 1; transform: translateY(-2px); }
+
+        /* 精选作品 */
+        .works-wrapper { padding: 4rem 0; }
+        .works-inner { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        .works-header { text-align: left; margin-bottom: 2rem; }
+        .works-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+        .work-card {
+            background: var(--color-surface); border-radius: 8px; overflow: hidden;
+            box-shadow: 0 1px 4px var(--color-shadow), 0 0 0 1px var(--color-border-light);
+            transition: box-shadow 0.35s, transform 0.35s;
+            cursor: pointer;
+        }
+        .work-card:hover {
+            box-shadow: 0 8px 30px var(--color-shadow-hover), 0 0 0 1px var(--color-border);
+            transform: translateY(-4px);
+        }
+        .work-card-image-wrapper { position: relative; overflow: hidden; aspect-ratio: 4 / 3; background: var(--color-bg-alt); }
+        .work-card-image { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s; }
+        .work-card:hover .work-card-image { transform: scale(1.08); }
+        .work-card-content { padding: 1.5rem; }
+        .work-card-number { font-size: 0.7rem; font-weight: 500; color: var(--color-text-muted); letter-spacing: 0.08em; }
+        .work-card-title { font-family: var(--font-display); font-size: 1.15rem; font-weight: 600; margin: 0.4rem 0; }
+        .work-card-description { font-size: 0.9rem; color: var(--color-text-tertiary); line-height: 1.6; }
+
+        .work-details { margin-top: 0.5rem; border-top: 1px solid var(--color-border-light); padding-top: 0.5rem; }
+        .work-details summary {
+            display: flex; align-items: center; font-size: 0.8rem; color: var(--color-text-secondary);
+            list-style: none; cursor: pointer; user-select: none;
+        }
+        .work-details summary::-webkit-details-marker { display: none; }
+        .summary-arrow {
+            width: 0; height: 0; border-left: 5px solid currentColor; border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent; margin-right: 0.4em; transition: transform 0.2s;
+        }
+        details[open] .summary-arrow { transform: rotate(90deg); }
+        .details-content {
+            margin-top: 0.5rem; padding: 0.7rem 1rem; background: var(--color-bg-alt);
+            border-radius: 4px; font-size: 0.8rem; line-height: 1.8; color: var(--color-text-tertiary);
+        }
+        .details-label { font-weight: 600; color: var(--color-text-secondary); min-width: 4em; }
+
+        /* 比较板块 */
+        .comparison-section {
+            padding: 4rem 0; background: var(--color-surface); border-radius: 8px;
+            margin: 3rem 0; box-shadow: 0 1px 3px var(--color-shadow), 0 0 0 1px var(--color-border-light);
+        }
+        .comparison-inner { max-width: 1000px; margin: 0 auto; padding: 0 2rem; }
+        .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; }
+        .comparison-item { text-align: center; }
+        .comparison-image { width: 100%; aspect-ratio: 3/2; object-fit: cover; border-radius: 6px; border: 1px solid var(--color-border); transition: box-shadow 0.35s; }
+        .comparison-item:hover .comparison-image { box-shadow: 0 4px 16px var(--color-shadow-hover); }
+        .comparison-label { display: inline-block; margin-top: 1rem; font-size: 0.85rem; font-weight: 500; color: var(--color-text-secondary); border-bottom: 2px solid transparent; transition: border-color 0.2s; }
+        .comparison-item:hover .comparison-label { border-bottom-color: var(--color-accent); }
+        .comparison-details { margin-top: 0.5rem; text-align: center; }
+        .comparison-details summary { display: inline-flex; align-items: center; font-size: 0.8rem; color: var(--color-text-secondary); cursor: pointer; list-style: none; }
+        .comparison-details .details-content { text-align: center; }
+
+        /* 流程步骤 */
+        .process-section {
+            padding: 4rem 0; background: var(--color-surface); border-radius: 8px;
+            margin: 2rem 0; box-shadow: 0 1px 3px var(--color-shadow), 0 0 0 1px var(--color-border-light);
+        }
+        .process-inner { max-width: 1000px; margin: 0 auto; padding: 0 2rem; }
+        .process-steps { display: flex; align-items: flex-start; justify-content: space-between; gap: 1.5rem; position: relative; }
+        .process-steps::before {
+            content: ''; position: absolute; top: 28px; left: 40px; right: 40px;
+            height: 2px; background: var(--color-border); z-index: 0; border-radius: 1px;
+        }
+        .process-step { flex: 1; text-align: center; position: relative; z-index: 1; }
+        .process-step-circle {
+            width: 56px; height: 56px; border-radius: 50%; background: var(--color-surface);
+            border: 2px solid var(--color-border); display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 1rem; font-family: var(--font-en); font-size: 1.1rem; font-weight: 600;
+            color: var(--color-text-secondary); transition: all 0.35s; cursor: pointer;
+            transform: scale(0.8); opacity: 0; 
+        }
+        .process-step.visible .process-step-circle { transform: scale(1); opacity: 1; }
+        .process-step-circle:hover {
+            border-color: var(--color-accent); color: var(--color-accent);
+            background: var(--color-bg-alt); box-shadow: 0 4px 16px var(--color-shadow-hover);
+            transform: scale(1.05);
+        }
+        .process-step-tool {
+            display: inline-block; padding: 0.4rem 1.4rem; border-radius: 100px;
+            font-size: 0.8rem; font-weight: 500; letter-spacing: 0.05em;
+            color: var(--color-text-muted); background: var(--color-bg-alt);
+            border: 1px solid var(--color-border-light); margin-top: 0.5rem;
+            transition: all 0.2s; cursor: pointer;
+        }
+        .process-step-tool:hover { background: var(--color-accent); color: #fff; border-color: var(--color-accent); }
+        body.dark .process-step-tool { color: #dddddd; border-color: #555; }
+        body.dark .process-step-tool:hover { background: #555555; color: #ffffff; }
+        .process-details { margin-top: 0.5rem; text-align: center; }
+        .process-details summary { display: inline-flex; align-items: center; font-size: 0.75rem; color: var(--color-text-secondary); cursor: pointer; list-style: none; }
+        .process-details .details-content { text-align: center; }
+
+        /* 工具清单 */
+        .tools-section { padding: 2rem 0; text-align: center; border-top: 1px solid var(--color-border-light); margin-top: 3rem; }
+        .tool-badge {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            background: var(--color-surface); border: 1px solid var(--color-border);
+            border-radius: 100px; padding: 0.4rem 1.2rem;
+            font-family: var(--font-en); font-size: 0.7rem; font-weight: 500;
+            color: var(--color-text-secondary); letter-spacing: 0.04em;
+            transition: all 0.2s; cursor: pointer; margin: 0.3rem;
+        }
+        .tool-badge:hover { border-color: var(--color-accent); color: var(--color-accent); background: var(--color-bg-alt); transform: translateY(-1px); }
+
+        /* 模态框 */
+        .modal-overlay {
+            position: fixed; inset: 0; background: var(--color-modal-overlay);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 2000; opacity: 0; pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-container {
+            background: var(--color-surface); border-radius: 12px; max-width: 800px;
+            width: 90%; max-height: 90vh; overflow-y: auto; position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            transform: scale(0.9); transition: transform 0.3s;
+        }
+        .modal-overlay.active .modal-container { transform: scale(1); }
+        .modal-close {
+            position: absolute; top: 1rem; right: 1rem;
+            background: var(--color-bg-alt); border: 1px solid var(--color-border);
+            border-radius: 50%; width: 36px; height: 36px;
+            font-size: 1.5rem; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--color-text-secondary); z-index: 5;
+            transition: background 0.2s;
+        }
+        .modal-close:hover { background: var(--color-border); }
+        .modal-main-image { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; border-radius: 12px 12px 0 0; }
+        .modal-arrows {
+            display: flex; justify-content: space-between; position: absolute; top: 50%;
+            left: 0; right: 0; transform: translateY(-50%); pointer-events: none; padding: 0 1rem;
+        }
+        .modal-arrow {
+            pointer-events: auto; background: rgba(0,0,0,0.5); color: #fff; border: none;
+            border-radius: 50%; width: 40px; height: 40px; font-size: 1.5rem;
+            cursor: pointer; transition: background 0.2s;
+        }
+        .modal-arrow:hover { background: rgba(0,0,0,0.8); }
+        .modal-body { padding: 2rem; }
+        .modal-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; }
+        .modal-desc { color: var(--color-text-tertiary); margin-bottom: 1.5rem; }
+        .modal-details p { margin-bottom: 0.5rem; }
+
+        .particles-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+
+        .footer-section { padding: 2.5rem 0; text-align: center; border-top: 1px solid var(--color-border-light); margin-top: 3rem; }
+        .footer-pdf-btn {
+            background: var(--color-accent); color: #fff; border: none;
+            padding: 0.4rem 1.4rem; border-radius: 100px;
+            font-size: 0.8rem; font-weight: 500; letter-spacing: 0.05em;
+            cursor: pointer; margin-top: 1rem; transition: opacity 0.2s;
+        }
+        .footer-pdf-btn:hover { opacity: 0.85; }
+        body.dark .footer-pdf-btn { background: #555555; color: #ffffff; }
+        body.dark .footer-pdf-btn:hover { background: #666666; }
+
+        .inspiration-section { text-align: center; padding: 2rem 0; }
+        .inspiration-title { font-size: 0.95rem; font-weight: 700; color: var(--color-text-primary); margin-bottom: 1rem; }
+        .inspiration-btn {
+            background: var(--color-surface); border: 1px solid var(--color-border);
+            padding: 0.6rem 2rem; border-radius: 100px;
+            font-size: 0.9rem; color: var(--color-text-secondary); cursor: pointer;
+            transition: all 0.2s; font-weight: 500;
+        }
+        .inspiration-btn:hover { border-color: var(--color-accent); color: var(--color-accent); background: var(--color-bg-alt); }
+
+        @media (max-width: 1024px) { .works-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 768px) {
+            .works-grid { grid-template-columns: 1fr; }
+            .comparison-grid { grid-template-columns: 1fr; }
+            .process-steps { flex-direction: column; }
+            .process-steps::before { display: none; }
+        }
+
+        @media print {
+            body { background: #fff; color: #000; }
+            .top-accent-line, .theme-toggle, .scroll-top-btn, .particles-container,
+            .modal-overlay, .footer-pdf-btn, .inspiration-section { display: none !important; }
+            .work-card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+            .comparison-section, .process-section { background: none; box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-accent-line"></div>
+    <button class="theme-toggle" id="themeToggle" title="切换日/夜间模式">☀️</button>
+    <button class="scroll-top-btn" id="scrollTopBtn" title="返回顶部">↑</button>
+    <div class="particles-container" id="particlesContainer"></div>
+    
+    <div class="modal-overlay" id="projectModal">
+        <div class="modal-container">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <div style="position: relative;">
+                <img class="modal-main-image" id="modalImage" src="" alt="">
+                <div class="modal-arrows" id="modalArrows" style="display:none;">
+                    <button class="modal-arrow prev" id="modalPrev">‹</button>
+                    <button class="modal-arrow next" id="modalNext">›</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <h2 class="modal-title" id="modalTitle"></h2>
+                <p class="modal-desc" id="modalDesc"></p>
+                <div class="modal-details" id="modalDetails"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <header style="padding: 6rem 0 3rem; text-align: center;">
+            <span style="font-family: var(--font-en); font-size:0.75rem; letter-spacing:0.2em; color:var(--color-text-tertiary);">Architecture Portfolio</span>
+            <h1 style="font-size: clamp(2.2rem,5vw,3.8rem); font-weight:700; margin:1rem 0;">
+                <span style="position:relative;">周彬</span> — 建筑设计作品集
+            </h1>
+            <p style="font-size: 1.2rem; color: var(--color-text-secondary); font-weight:300;">探索空间、光影与材料的对话</p>
+        </header>
+
+        <section style="padding: 4rem 0;">
+            <div style="max-width:720px; margin:0 auto; padding:3rem 2rem; background:var(--color-surface); border-radius:8px; position:relative;
+                 box-shadow:0 1px 3px var(--color-shadow), 0 0 0 1px var(--color-border-light);">
+                <div style="position:absolute; left:1.5rem; top:2rem; bottom:2rem; width:3px; background:var(--color-accent); opacity:0.7; border-radius:2px;"></div>
+                <span style="font-size:0.7rem; font-weight:600; letter-spacing:0.25em; color:var(--color-text-tertiary); display:block;">Design Philosophy</span>
+                <p style="font-size:1.1rem; line-height:1.9; padding-left:2rem;">建筑不仅是功能的容器，更是情感与记忆的载体。我致力于在每一寸空间中寻找秩序与诗意的平衡点——让光线成为无声的向导，让材料诉说时间的故事，让空间本身成为人与自然之间的温柔媒介。</p>
+            </div>
+        </section>
+
+        <section class="works-wrapper">
+            <div class="works-inner">
+                <div class="works-header">
+                    <span style="font-size:0.7rem; font-weight:600; letter-spacing:0.22em; color:var(--color-text-tertiary);">Selected Works</span>
+                    <h2 style="font-size:2rem; font-weight:600; margin-top:0.5rem;">精选作品</h2>
+                </div>
+                <div class="works-grid" id="worksGrid">
+                    <article class="work-card" data-index="0">
+                        <div class="work-card-image-wrapper">
+                            <img class="work-card-image" src="https://picsum.photos/seed/bio-treehouse-cover/800/600" alt="未来树屋">
+                        </div>
+                        <div class="work-card-content">
+                            <span class="work-card-number">01</span>
+                            <h3 class="work-card-title">未来树屋</h3>
+                            <p class="work-card-description">以仿生结构探索人居与自然共生的可能性，让建筑如树木般从大地中生长而出。</p>
+                            <details class="work-details">
+                                <summary><span class="summary-arrow"></span> 查看详细参数</summary>
+                                <div class="details-content"><p><span class="details-label">面积</span> 120㎡</p><p><span class="details-label">材料</span> 胶合木、钢节点、ETFE充气膜、再生铝板</p><p><span class="details-label">规模</span> 3层 · 最高点距地面9m</p><p><span class="details-label">风格</span> 生态未来主义 · 有机仿生</p></div>
+                            </details>
+                        </div>
+                    </article>
+                    <article class="work-card" data-index="1">
+                        <div class="work-card-image-wrapper">
+                            <img class="work-card-image" src="https://picsum.photos/seed/water-library-cover/800/600" alt="滨水图书馆">
+                        </div>
+                        <div class="work-card-content">
+                            <span class="work-card-number">02</span>
+                            <h3 class="work-card-title">滨水图书馆</h3>
+                            <p class="work-card-description">在水岸边界营造沉浸式阅读体验，通过光影变幻重新定义知识空间的边界。</p>
+                            <details class="work-details">
+                                <summary><span class="summary-arrow"></span> 查看详细参数</summary>
+                                <div class="details-content"><p><span class="details-label">面积</span> 2500㎡</p><p><span class="details-label">材料</span> 玻璃幕墙、阳极氧化铝百叶、耐候钢、竹木内饰</p><p><span class="details-label">规模</span> 2层 · 层高5.4m · 总长60m</p><p><span class="details-label">风格</span> 极简现代主义 · 光影静谧</p></div>
+                            </details>
+                        </div>
+                    </article>
+                    <article class="work-card" data-index="2">
+                        <div class="work-card-image-wrapper">
+                            <img class="work-card-image" src="https://picsum.photos/seed/community-renewal-cover/800/600" alt="社区微更新">
+                        </div>
+                        <div class="work-card-content">
+                            <span class="work-card-number">03</span>
+                            <h3 class="work-card-title">社区微更新</h3>
+                            <p class="work-card-description">以针灸式介入激活老旧街区，在保留记忆的同时注入新的公共生活活力。</p>
+                            <details class="work-details">
+                                <summary><span class="summary-arrow"></span> 查看详细参数</summary>
+                                <div class="details-content"><p><span class="details-label">面积</span> 80㎡</p><p><span class="details-label">材料</span> 回收红砖、玻璃砖、耐候钢、本地杉木</p><p><span class="details-label">规模</span> 单层 · 檐口高度3.6m · 开间6m</p><p><span class="details-label">风格</span> 记忆更新 · 新旧拼贴</p></div>
+                            </details>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="comparison-section">
+            <div class="comparison-inner">
+                <div style="text-align:center; margin-bottom:2rem;">
+                    <span style="font-size:0.7rem; font-weight:600; letter-spacing:0.22em; color:var(--color-text-tertiary);">AI vs Human</span>
+                    <h2 style="font-size:2rem; font-weight:600; margin-top:0.5rem;">从 AI 概念到建成方案</h2>
+                </div>
+                <div class="comparison-grid">
+                    <div class="comparison-item">
+                        <img class="comparison-image" src=https://picsum.photos/seed/ai-thinking-concept/600/400 alt="AI 概念图">
+                        <span class="comparison-label">AI 初步构思</span>
+                        <details class="comparison-details">
+                            <summary><span class="summary-arrow"></span> 查看详情</summary>
+                            <div class="details-content">利用 Midjourney 与即梦 AI，输入未来树屋、滨水图书馆、社区微更新等关键词，快速生成数十种概念方案。从仿生有机形态到极简水平线条，从通透光影到新旧材质拼贴，AI 在短时间内探索了大量风格可能性，为设计师提供跨越常规的灵感火花。</div>
+                        </details>
+                    </div>
+                    <div class="comparison-item">
+                        <img class="comparison-image" src=https://picsum.photos/seed/architect-design-detail/600/400 alt="最终设计">
+                        <span class="comparison-label">人工深化设计</span>
+                        <details class="comparison-details">
+                            <summary><span class="summary-arrow"></span> 查看详情</summary>
+                            <div class="details-content">在 AI 概念基础上，建筑师展开结构可行性分析、材料比选与空间细化。未来树屋采用曲面胶合木壳体与 ETFE 膜实现轻盈仿生；滨水图书馆以可旋转铝板百叶调控光影；社区微更新将回收红砖与现代玻璃砖交织。多轮人机交互迭代，最终凝练为兼具诗意与建造逻辑的设计方案。</div>
+                        </details>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="process-section">
+            <div class="process-inner">
+                <div style="text-align:center; margin-bottom:2rem;">
+                    <span style="font-size:0.7rem; font-weight:600; letter-spacing:0.22em; color:var(--color-text-tertiary);">AI Collaboration</span>
+                    <h2 style="font-size:2rem; font-weight:600; margin-top:0.5rem;">AI协作设计流程</h2>
+                </div>
+                <div class="process-steps" id="processSteps">
+                    <div class="process-step">
+                        <div class="process-step-circle">1</div>
+                        <div>
+                            <p style="font-weight:600; font-size:0.95rem;">概念对话</p>
+                            <p style="font-size:0.8rem; color:var(--color-text-tertiary);">与AI助手深度探讨设计理念，明确空间叙事与核心意象方向</p>
+                            <span class="process-step-tool">ChatGPT · Claude</span>
+                            <details class="process-details">
+                                <summary><span class="summary-arrow"></span> 详细说明</summary>
+                                <div class="details-content">通过与 DeepSeek 等大语言模型的多轮对话，建筑师将抽象的设计愿景转化为可描述的空间语言。AI 助手提供跨学科灵感参考，协助梳理项目背景、文化脉络与功能需求，从而确立未来树屋的仿生逻辑、滨水图书馆的光影叙事、社区微更新的记忆延续等核心概念框架。</div>
+                            </details>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-step-circle">2</div>
+                        <div>
+                            <p style="font-weight:600; font-size:0.95rem;">意象生成</p>
+                            <p style="font-size:0.8rem; color:var(--color-text-tertiary);">使用AI图像工具生成空间参考意象，快速探索多种风格可能性</p>
+                            <span class="process-step-tool">Midjourney</span>
+                            <details class="process-details">
+                                <summary><span class="summary-arrow"></span> 详细说明</summary>
+                                <div class="details-content">基于确定的概念方向，利用 Midjourney 等生成式图像模型，输入包含材质、光影、尺度、环境的关键词组合，批量生成数十张空间意象图。从有机木构曲面到极简玻璃盒子，从温暖砖构拼贴到轻盈膜结构，AI 在数小时内即可遍历人工需要数周的风格探索。</div>
+                            </details>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-step-circle">3</div>
+                        <div>
+                            <p style="font-weight:600; font-size:0.95rem;">草图创作</p>
+                            <p style="font-size:0.8rem; color:var(--color-text-tertiary);">通过AI平台生成建筑方案草图，迭代优化空间构成与形态</p>
+                            <span class="process-step-tool">即梦 AI</span>
+                            <details class="process-details">
+                                <summary><span class="summary-arrow"></span> 详细说明</summary>
+                                <div class="details-content">将优选意象导入即梦 AI 等平台，结合体块模型与空间约束，生成初步建筑方案草图。这一阶段重点推敲空间序列、剖面关系与结构逻辑，AI 辅助快速变异出多种体量组合方案，并通过迭代反馈优化形态与功能的平衡。</div>
+                            </details>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-step-circle">4</div>
+                        <div>
+                            <p style="font-weight:600; font-size:0.95rem;">筛选整合</p>
+                            <p style="font-size:0.8rem; color:var(--color-text-tertiary);">人机协作筛选优质方案，深化细节并整合为最终设计成果</p>
+                            <span class="process-step-tool">综合优化</span>
+                            <details class="process-details">
+                                <summary><span class="summary-arrow"></span> 详细说明</summary>
+                                <div class="details-content">建筑师与 AI 协同评判方案的建造可行性、美学品质与场所精神，结合手工模型推敲与参数化分析，对材料节点、光影表现、细部构造进行深化设计。最终将 AI 提供的灵感与人工经验深度融合，输出兼具创新性与可实施性的完整设计方案。</div>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="tools-section">
+            <div style="text-align:center; margin-bottom:1.5rem;">
+                <h2 style="font-size:1.5rem;">AI 工具及技术清单</h2>
+            </div>
+            <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:0.5rem;">
+                <span class="tool-badge"><strong>DeepSeek</strong> 代码生成</span>
+                <span class="tool-badge"><strong>Midjourney</strong> 概念意象</span>
+                <span class="tool-badge"><strong>即梦 AI</strong> 辅助草图</span>
+                <span class="tool-badge"><strong>剪映</strong> 配音合成</span>
+            </div>
+            <p style="margin-top:1.5rem; font-size:0.75rem; color:var(--color-text-muted);">本网站所有代码及部分视觉元素由 AI 辅助生成</p>
+        </section>
+
+        <section class="inspiration-section">
+            <p class="inspiration-title">探索更多 AI 建筑灵感</p>
+            <button class="inspiration-btn" id="inspirationBtn">改图鸭 AI 设计平台</button>
+        </section>
+
+        <footer class="footer-section">
+            <p style="font-weight:500;">周彬</p>
+            <p style="font-size:0.75rem; color:var(--color-text-muted); margin-top:0.5rem;">
+                &copy; 2026 周彬 · All Rights Reserved
+            </p>
+            <button class="footer-pdf-btn" id="pdfDownloadBtn">下载 PDF 作品集</button>
+        </footer>
+    </div>
+
+    <script>
+        const projects = [{"title": "未来树屋", "desc": "以仿生结构探索人居与自然共生的可能性，让建筑如树木般从大地中生长而出。", "badge": "设计概念", "image": "https://picsum.photos/seed/bio-treehouse-cover/800/600", "images": ["https://picsum.photos/seed/treehouse-interior/800/600", "https://picsum.photos/seed/treehouse-structure/800/600", "https://picsum.photos/seed/treehouse-detail/800/600"], "details": {"面积": "120㎡", "材料": "胶合木、钢节点、ETFE充气膜、再生铝板", "规模": "3层 · 最高点距地面9m", "风格": "生态未来主义 · 有机仿生"}}, {"title": "滨水图书馆", "desc": "在水岸边界营造沉浸式阅读体验，通过光影变幻重新定义知识空间的边界。", "badge": "方案深化", "image": "https://picsum.photos/seed/water-library-cover/800/600", "images": ["https://picsum.photos/seed/library-reading/800/600", "https://picsum.photos/seed/library-light/800/600", "https://picsum.photos/seed/library-exterior/800/600"], "details": {"面积": "2500㎡", "材料": "玻璃幕墙、阳极氧化铝百叶、耐候钢、竹木内饰", "规模": "2层 · 层高5.4m · 总长60m", "风格": "极简现代主义 · 光影静谧"}}, {"title": "社区微更新", "desc": "以针灸式介入激活老旧街区，在保留记忆的同时注入新的公共生活活力。", "badge": "城市介入", "image": "https://picsum.photos/seed/community-renewal-cover/800/600", "images": ["https://picsum.photos/seed/community-garden/800/600", "https://picsum.photos/seed/community-plaza/800/600", "https://picsum.photos/seed/community-detail/800/600"], "details": {"面积": "80㎡", "材料": "回收红砖、玻璃砖、耐候钢、本地杉木", "规模": "单层 · 檐口高度3.6m · 开间6m", "风格": "记忆更新 · 新旧拼贴"}}];
+
+        // 默认白天模式，使用清晰的图标
+        const themeToggle = document.getElementById('themeToggle');
+        const applyTheme = (dark) => {
+            if (dark) {
+                document.body.classList.add('dark');
+                themeToggle.innerHTML = '☾';   // 月亮符号，暗色下可见
+            } else {
+                document.body.classList.remove('dark');
+                themeToggle.innerHTML = '☀️';  // 太阳符号，白天可见
+            }
+        };
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark') applyTheme(true);
+        else applyTheme(false);
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.body.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            themeToggle.innerHTML = isDark ? '☾' : '☀️';
+        });
+
+        const scrollTopBtn = document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll', () => {
+            scrollTopBtn.classList.toggle('visible', window.scrollY > window.innerHeight);
+        });
+        scrollTopBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+        const modal = document.getElementById('projectModal');
+        const modalImage = document.getElementById('modalImage');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDesc = document.getElementById('modalDesc');
+        const modalDetails = document.getElementById('modalDetails');
+        const modalArrows = document.getElementById('modalArrows');
+        let currentProject = null, currentImgIndex = 0;
+
+        function showModal(index) {
+            const proj = projects[index];
+            currentProject = proj;
+            currentImgIndex = 0;
+            modalImage.src = proj.images[0];
+            modalTitle.textContent = proj.title;
+            modalDesc.textContent = proj.desc;
+            let html = '';
+            for (const [key, value] of Object.entries(proj.details)) {
+                html += `<p><span class="details-label">${key}</span> ${value}</p>`;
+            }
+            modalDetails.innerHTML = html;
+            modalArrows.style.display = proj.images.length > 1 ? 'flex' : 'none';
+            modal.classList.add('active');
+        }
+
+        function closeModal() { modal.classList.remove('active'); }
+        document.getElementById('modalClose').addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('active')) closeModal(); });
+
+        document.getElementById('modalPrev').addEventListener('click', () => {
+            if (!currentProject) return;
+            currentImgIndex = (currentImgIndex - 1 + currentProject.images.length) % currentProject.images.length;
+            modalImage.src = currentProject.images[currentImgIndex];
+        });
+        document.getElementById('modalNext').addEventListener('click', () => {
+            if (!currentProject) return;
+            currentImgIndex = (currentImgIndex + 1) % currentProject.images.length;
+            modalImage.src = currentProject.images[currentImgIndex];
+        });
+
+        document.querySelectorAll('.work-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                if (e.target.closest('details')) return;
+                showModal(parseInt(card.dataset.index));
+            });
+        });
+
+        const particlesContainer = document.getElementById('particlesContainer');
+        function createParticle(x, y, colors) {
+            const particle = document.createElement('div');
+            const size = Math.random() * 6 + 2;
+            const angle = Math.random() * Math.PI * 2;
+            const distance = Math.random() * 70 + 20;
+            const tx = Math.cos(angle) * distance;
+            const ty = Math.sin(angle) * distance;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const duration = Math.random() * 600 + 400;
+            particle.style.cssText = `
+                position:absolute; left:${x}px; top:${y}px;
+                width:${size}px; height:${size}px; background:${color};
+                border-radius:50%; pointer-events:none; opacity:0.9;
+                transform:translate(0,0) scale(1);
+                transition:all ${duration}ms cubic-bezier(0.25,0.46,0.45,0.94);
+            `;
+            particlesContainer.appendChild(particle);
+            requestAnimationFrame(() => {
+                particle.style.opacity = '0';
+                particle.style.transform = `translate(${tx}px, ${ty}px) scale(0.2)`;
+            });
+            setTimeout(() => particle.remove(), duration + 50);
+        }
+
+        document.addEventListener('click', (e) => {
+            const isContent = e.target.closest('.work-card') || e.target.closest('details') || e.target.closest('.tool-badge')
+                           || e.target.closest('.process-step-circle') || e.target.closest('.process-step-tool');
+            if (isContent) {
+                const mono = ['#2c2c2c','#4a4a4a','#7a7a7a','#9a9a9a','#d5d3ce'];
+                for (let i=0;i<12;i++) createParticle(e.clientX, e.clientY, mono);
+            } else {
+                const colors = ['#e74c3c','#3498db','#2ecc71','#f1c40f','#9b59b6','#e67e22','#1abc9c'];
+                for (let i=0;i<16;i++) createParticle(e.clientX, e.clientY, colors);
+            }
+        });
+
+        document.getElementById('pdfDownloadBtn').addEventListener('click', () => { window.print(); });
+
+        document.getElementById('inspirationBtn').addEventListener('click', () => {
+            if (confirm('即将跳转至改图鸭 AI 设计平台，是否继续？')) {
+                window.open('https://www.gaituya.com', '_blank', 'noopener');
+            }
+        });
+
+        const processSteps = document.querySelectorAll('.process-step');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
+        processSteps.forEach(step => observer.observe(step));
+
+        console.log('%c️  周彬 · 建筑设计作品集 %c| %c探索空间、光影与材料的对话',
+            'font-size:1.1em;font-weight:bold;color:#2c2c2c;', '', 'color:#7a7a7a;');
+    </script>
+</body>
+</html>
